@@ -16,6 +16,7 @@
         <log4j.version>2.9.1</log4j.version>
         <jersey2.version>2.19</jersey2.version>
         <jaxrs.version>2.0.1</jaxrs.version>
+        <netshell.libraries.version>2.0-SNAPSHOT</netshell.libraries.version>
     </properties>
 
     <dependencyManagement>
@@ -50,6 +51,16 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>6.0.6</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netshell.libraries</groupId>
+                <artifactId>utilities</artifactId>
+                <version>${netshell.libraries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netshell.libraries.dbmodules</groupId>
+                <artifactId>db-common</artifactId>
+                <version>${netshell.libraries.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

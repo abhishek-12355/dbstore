@@ -1,0 +1,38 @@
+version: "3.0"
+services:
+  mariadb:
+    image: mariadb:latest
+    ports:
+      - "3306"
+    volumes:
+      - ./volumes/mariadb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+      - ./volumes/mariadb/conf.d:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    hostname:
+      db.dbstore.netshell.com
+    container_name:
+      netshell_dbstore
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "5"
+  dbstore:
+    image: netshell/dbstore-docker:1.0-SNAPSHOT
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+    hostname:
+      api.dbstore.netshell.com
+    container_name:
+      netshell_web
+    depends_on:
+      - mariadb
+#    logging:
+#      driver: "json-file"
+#      options:
+#        max-size: "10m"
+#        max-file: "5"

@@ -10,6 +10,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>dbstore-api</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.netshell.libraries</groupId>
+            <artifactId>utilities</artifactId>
+        </dependency>
+    </dependencies>
 	
 	<build>
 		<finalName>dbstore-api</finalName>

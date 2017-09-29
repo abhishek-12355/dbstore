@@ -20,12 +20,10 @@
         <dependency>
             <groupId>com.netshell.libraries</groupId>
             <artifactId>utilities</artifactId>
-			<version>2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.netshell.libraries.dbmodules</groupId>
             <artifactId>db-common</artifactId>
-			<version>2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
