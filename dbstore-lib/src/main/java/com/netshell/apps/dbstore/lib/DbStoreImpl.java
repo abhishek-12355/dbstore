@@ -33,13 +33,12 @@ public class DbStoreImpl implements DBStoreApi {
     public String retrieveString(String id) {
         DBUtil.Holder<String> holder = new DBUtil.Holder<>();
         retrieveStream(id, inputStream -> {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             try {
-                IOUtils.inputToOutputStream(inputStream, outputStream);
-            } catch (IOException e) {
+                final Object o = IOUtils.toStreamObject(inputStream);
+                holder.item = String.class.cast(o);
+            } catch (IOException | ClassNotFoundException e) {
                 throw new RuntimeException(e);
             }
-            holder.item = new String(outputStream.toByteArray());
         });
         return holder.item;
     }
@@ -82,11 +81,11 @@ public class DbStoreImpl implements DBStoreApi {
 
     private static InputStream createStream(Object object) throws IOException {
         final InputStream stream;
-        if (!(object instanceof InputStream)) {
+        if ((object instanceof InputStream)) {
+            stream = (InputStream) object;
+        } else {
             final ByteArrayOutputStream outputStream = IOUtils.toObjectStream(object);
             stream = new ByteArrayInputStream(outputStream.toByteArray());
-        } else {
-            stream = (InputStream) object;
         }
 
         return stream;
