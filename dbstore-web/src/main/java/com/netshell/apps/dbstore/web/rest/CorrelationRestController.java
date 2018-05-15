@@ -1,5 +1,6 @@
 package com.netshell.apps.dbstore.web.rest;
 
+import com.netshell.apps.dbstore.api.Correlation;
 import com.netshell.apps.dbstore.api.CorrelationData;
 import com.netshell.apps.dbstore.api.CorrelationData.CorrelationDataBuilder;
 
@@ -25,24 +26,22 @@ public class CorrelationRestController {
                 .withData(data);
 
         CorrelationUtils.createCorrelation(builder.build());
-        return Response.ok().build();
+        return Response.noContent().build();
     }
 
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String retrieveCorrelation(@QueryParam("providerId") String providerId,
-                                      @QueryParam("providerEntityId") String providerEntityId,
-                                      @QueryParam("consumerId") String consumerId,
-                                      @QueryParam("consumerEntityId") String consumerEntityId,
-                                      @QueryParam("dispose") boolean dispose) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response retrieveCorrelation(@QueryParam("providerId") String providerId,
+                                           @QueryParam("providerEntityId") String providerEntityId,
+                                           @QueryParam("dispose") boolean dispose,
+                                           @QueryParam("dataOnly") boolean dataOnly) {
         final CorrelationDataBuilder builder = new CorrelationDataBuilder(CorrelationData.CorrelationDataBuilderType.RETRIEVE);
-        builder.withConsumerEntityId(consumerEntityId)
-                .withConsumerId(consumerId)
-                .withProviderEntityId(providerEntityId)
+        builder.withProviderEntityId(providerEntityId)
                 .withProviderId(providerId)
                 .withDispose(dispose);
 
-        return CorrelationUtils.retrieveCorrelation(builder.build());
+        final Correlation entity = CorrelationUtils.retrieveCorrelation(builder.build());
+        return Response.ok(dataOnly ? entity.getData().orElse("") : entity).build();
     }
 
 }
