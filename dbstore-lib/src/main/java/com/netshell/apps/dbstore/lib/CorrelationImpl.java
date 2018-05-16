@@ -64,9 +64,7 @@ public class CorrelationImpl implements CorrelationApi {
     private List<String> createRetrieveList(CorrelationData correlationData) {
         return Arrays.asList(
                 correlationData.getProviderId(),
-                correlationData.getProviderEntityId(),
-                CommonMethods.checkInputDefault(correlationData.getConsumerId(), null),
-                CommonMethods.checkInputDefault(correlationData.getConsumerEntityId(), null)
+                correlationData.getProviderEntityId()
         );
     }
 }

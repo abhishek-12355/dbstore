@@ -95,7 +95,7 @@
                                 <argument>${project.basedir}/src/test/robotframework/acceptance/store_test.robot
                                 </argument>
                             </arguments>
-                            <executable>${robot-script}</executable>
+                            <executable>${robot-exec}</executable>
                         </configuration>
                         <executions>
                             <execution>

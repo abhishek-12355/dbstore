@@ -18,7 +18,7 @@
         <jersey2.version>2.19</jersey2.version>
         <jaxrs.version>2.0.1</jaxrs.version>
         <netshell.libraries.version>2.0-SNAPSHOT</netshell.libraries.version>
-        <robot-script>C:\Python27\Scripts\robot.bat</robot-script>
+        <robot-exec>robot</robot-exec>
     </properties>
 
     <dependencyManagement>
@@ -68,11 +68,11 @@
     </dependencyManagement>
 
     <artifactId>dbstore</artifactId>
-	<groupId>com.netshell.apps.dbstore</groupId>
-	<version>1.0-SNAPSHOT</version>
-	
-	<build>
-		<finalName>dbstore</finalName>
+    <groupId>com.netshell.apps.dbstore</groupId>
+    <version>1.0-SNAPSHOT</version>
+
+    <build>
+        <finalName>dbstore</finalName>
 
         <pluginManagement>
             <plugins>
@@ -98,17 +98,17 @@
             </plugins>
         </pluginManagement>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 
 </project>
