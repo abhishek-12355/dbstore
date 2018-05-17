@@ -12,6 +12,17 @@
         <module>dbstore-test</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>Maven Repository</id>
+            <url>https://raw.github.com/abhishek-12355/mvn-repo/master/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <log4j.version>2.9.1</log4j.version>
