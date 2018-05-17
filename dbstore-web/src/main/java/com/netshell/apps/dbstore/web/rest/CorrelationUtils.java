@@ -9,8 +9,14 @@ public class CorrelationUtils {
 
     private static final CorrelationApi API = new CorrelationImpl();
 
-    public static void createCorrelation(CorrelationData correlationData) {
+    public static Correlation createCorrelation(CorrelationData correlationData) {
+        final Correlation correlation = retrieveCorrelation(correlationData);
+        if (correlation != null) {
+            API.updateCorrelation(correlationData);
+            return correlation;
+        }
         API.createCorrelation(correlationData);
+        return null;
     }
 
     public static Correlation retrieveCorrelation(CorrelationData correlationData) {

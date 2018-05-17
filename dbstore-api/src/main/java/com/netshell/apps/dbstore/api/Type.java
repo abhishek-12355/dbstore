@@ -1,6 +1,8 @@
 package com.netshell.apps.dbstore.api;
 
-public enum Type {
+import java.io.Serializable;
+
+public enum Type implements Serializable {
     STRING,
     STREAM
 }

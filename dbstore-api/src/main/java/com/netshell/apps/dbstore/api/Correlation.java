@@ -1,8 +1,9 @@
 package com.netshell.apps.dbstore.api;
 
+import java.io.Serializable;
 import java.util.Optional;
 
-public final class Correlation {
+public final class Correlation implements Serializable {
   private final String data;
   private final String consumerId;
   private final String consumerEntityId;
@@ -23,5 +24,14 @@ public final class Correlation {
 
   public Optional<String> getConsumerEntityId() {
     return Optional.of(consumerEntityId);
+  }
+
+  @Override
+  public String toString() {
+    return "Correlation{" +
+            "data='" + data + '\'' +
+            ", consumerId='" + consumerId + '\'' +
+            ", consumerEntityId='" + consumerEntityId + '\'' +
+            '}';
   }
 }

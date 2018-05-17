@@ -1,13 +1,17 @@
 package com.netshell.apps.dbstore.lib;
 
 import com.netshell.apps.dbstore.api.DBStoreApi;
+import com.netshell.apps.dbstore.api.DBStoreMetadata;
 import com.netshell.libraries.dbmodules.dbcommon.util.DBUtil;
 import com.netshell.apps.dbstore.api.Type;
+import com.netshell.libraries.utilities.common.CommonUtils;
 import com.netshell.libraries.utilities.common.IOUtils;
 import com.netshell.libraries.utilities.services.id.IDGeneratorService;
 
 import java.io.*;
 import java.sql.Blob;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -18,6 +22,7 @@ public class DbStoreImpl implements DBStoreApi {
     private static final String NS_DBSTORE = "ns_dbstore";
     private static final String QUERY_INSERT = "INSERT INTO ns_dbstore values(?,?,?,?)";
     private static final String QUERY_RETRIEVE = "SELECT * FROM ns_dbstore where store_id=?";
+    private static final String QUERY_DELETE = "DELETE FROM ns_dbstore where store_id=?";
 
     @Override
     public String saveString(String object) {
@@ -59,6 +64,47 @@ public class DbStoreImpl implements DBStoreApi {
                     }
                 }
         );
+    }
+
+    @Override
+    public void delete(String id) {
+        final int i = DBUtil.executeUpdate(
+                QUERY_DELETE,
+                Collections.singletonList(id)
+        );
+
+        if (i != 1) {
+            throw new RuntimeException("Unable to delete");
+        }
+    }
+
+    @Override
+    public DBStoreMetadata retrieveWithMetadata(String id) {
+        DBUtil.Holder<DBStoreMetadata> holder = new DBUtil.Holder<>();
+        DBUtil.executeQuery(
+                QUERY_RETRIEVE,
+                Collections.singletonList(id),
+                resultSet -> {
+                    if(resultSet.next()) {
+                        final Type type = Type.valueOf(resultSet.getString("type"));
+                        final LocalDateTime dateTime = resultSet.getTimestamp("created").toLocalDateTime();
+                        final Blob payload = resultSet.getBlob("payload");
+                        byte[] bytes;
+                        try {
+                            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                            IOUtils.inputToOutputStream(payload.getBinaryStream(), outputStream);
+                            bytes = outputStream.toByteArray();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        } finally {
+                            payload.free();
+                        }
+
+                        holder.item = new DBStoreMetadata(id, type, bytes, dateTime);
+                    }
+                }
+        );
+        return holder.item;
     }
 
     private static String saveObject(Object object, Type type) {

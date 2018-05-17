@@ -1,6 +1,7 @@
 package com.netshell.apps.dbstore.web.rest;
 
 import com.netshell.apps.dbstore.api.DBStoreApi;
+import com.netshell.apps.dbstore.api.DBStoreMetadata;
 import com.netshell.apps.dbstore.lib.DbStoreImpl;
 import com.netshell.libraries.utilities.common.IOUtils;
 import com.netshell.libraries.utilities.common.Wrapper;
@@ -28,5 +29,13 @@ public class DBStoreUtils {
 
     public static void retrieveStream(String id, OutputStream outputStream) {
         API.retrieveStream(id, inputStream -> wrapConsumer(() -> IOUtils.inputToOutputStream(inputStream, outputStream)));
+    }
+
+    public static void delete(String id) {
+        API.delete(id);
+    }
+
+    public static DBStoreMetadata retrieveWithMetadata(String id) {
+        return API.retrieveWithMetadata(id);
     }
 }

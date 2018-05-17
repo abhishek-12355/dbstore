@@ -10,4 +10,8 @@ public interface DBStoreApi {
 
     String retrieveString(String id);
     void retrieveStream(String id, Consumer<InputStream> consumer);
+
+    void delete(String id);
+
+    DBStoreMetadata retrieveWithMetadata(String id);
 }

@@ -1,10 +1,11 @@
 package com.netshell.apps.dbstore.web.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.netshell.apps.dbstore.api.Correlation;
 import com.netshell.apps.dbstore.api.CorrelationData;
 import com.netshell.apps.dbstore.api.CorrelationData.CorrelationDataBuilder;
 import com.netshell.libraries.utilities.common.JsonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -13,23 +14,38 @@ import javax.ws.rs.core.Response;
 @Path("/correlation")
 public class CorrelationRestController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CorrelationRestController.class);
+
     @PUT
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
     public Response createCorrelation(String data,
                                       @QueryParam("providerId") String providerId,
                                       @QueryParam("providerEntityId") String providerEntityId,
                                       @QueryParam("consumerId") String consumerId,
-                                      @QueryParam("consumerEntityId") String consumerEntityId) {
+                                      @QueryParam("consumerEntityId") String consumerEntityId,
+                                      @QueryParam("dataOnly") boolean dataOnly) {
 
-        final CorrelationDataBuilder builder = new CorrelationDataBuilder(CorrelationData.CorrelationDataBuilderType.SAVE);
-        builder.withConsumerEntityId(consumerEntityId)
-                .withConsumerId(consumerId)
-                .withProviderEntityId(providerEntityId)
-                .withProviderId(providerId)
-                .withData(data);
+        try {
+            final CorrelationDataBuilder builder = new CorrelationDataBuilder(CorrelationData.CorrelationDataBuilderType.SAVE);
+            builder.withConsumerEntityId(consumerEntityId)
+                    .withConsumerId(consumerId)
+                    .withProviderEntityId(providerEntityId)
+                    .withProviderId(providerId)
+                    .withData(data);
 
-        CorrelationUtils.createCorrelation(builder.build());
-        return Response.noContent().build();
+            final Correlation entity = CorrelationUtils.createCorrelation(builder.build());
+            if (entity == null) {
+                return Response.noContent().build();
+            }
+            if (dataOnly) {
+                return Response.ok(entity.getData().orElse("")).type(MediaType.TEXT_PLAIN).build();
+            } else {
+                return Response.ok(JsonUtils.writeValueAsString(entity)).type(MediaType.APPLICATION_JSON).build();
+            }
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return Response.serverError().entity(e.getMessage()).build();
+        }
     }
 
     @GET
@@ -45,13 +61,17 @@ public class CorrelationRestController {
 
         try {
             final Correlation entity = CorrelationUtils.retrieveCorrelation(builder.build());
+            if (entity == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
             if (dataOnly) {
                 return Response.ok(entity.getData().orElse("")).type(MediaType.TEXT_PLAIN).build();
             } else {
                 return Response.ok(JsonUtils.writeValueAsString(entity)).type(MediaType.APPLICATION_JSON).build();
             }
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+            return Response.serverError().entity(e.getMessage()).build();
         }
     }
 
